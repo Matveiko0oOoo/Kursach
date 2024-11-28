@@ -8,7 +8,8 @@
         <link rel="stylesheet" href="/static/css/style.css">
 
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+              rel="stylesheet"
               integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
               crossorigin="anonymous">
 
@@ -23,7 +24,7 @@
             <#if user.email??>
                 <div class="dropdown text-end">
                     <a href="/profile">
-                        <img src="/static/images/avatar.png" alt=" Профиль  "
+                        <img src="/image/avatar.png" alt="Профиль"
                              width="32" height="32" class="rounded-circle">
                     </a>
                 </div>
@@ -39,15 +40,18 @@
         <#nested/>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/3/4p4V+8m4U5cmFz+I8L+4Jp5q9zF7l5RZ5K6"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
-            integrity="sha384-oBqDVmMz4fnFO9gybP9YxZ1jPqzF2Yc2EoH3CC7TQZ7K/6k5b2+mbD2zM5Cj1d6"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"
-            integrity="sha384-3H8D8UwE7Oq4jN1G1b5Q6N4g1Z8C6zA3X1H8L9h5y5X8P4U5xH8G3y5Z5C5n5P"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
+            integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
     </body>
     </html>
 </#macro>
+

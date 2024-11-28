@@ -1,2 +1,11 @@
-package com.example.buysell.repositories;public interface CityRepository {
+package com.example.buysell.repositories;
+
+import com.example.buysell.models.City;
+import com.example.buysell.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CityRepository extends JpaRepository<City, Long> {
+    City findByCityName(String cityName);
 }

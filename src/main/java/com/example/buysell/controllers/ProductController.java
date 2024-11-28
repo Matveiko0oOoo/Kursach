@@ -38,8 +38,9 @@ public class ProductController {
     @PostMapping("/product/create")
     public String createProduct(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3, Product product, Principal principal) throws IOException {
         if (principal == null) {
-            return "redirect:/login"; // Перенаправление на страницу входа
+            return "redirect:/login";
         }
+
         productService.saveProduct(principal, product, file1, file2, file3);
         return "redirect:/my/products";
     }
@@ -47,7 +48,7 @@ public class ProductController {
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id, Principal principal){
         productService.deleteProduct(productService.getUserByPrincipal(principal),id);
-        return "redirect:/";
+        return "redirect:/my/products";
     }
 
     @GetMapping("/my/products")

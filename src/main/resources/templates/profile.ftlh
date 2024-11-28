@@ -4,7 +4,7 @@
     <hr>
     <br>
     <div style="text-align: center">
-        <img src="/static/images/avatar.png" style="border:2px solid black; border-radius: 20px" width="200" height="200"><br>
+        <img src="/image/avatar.png" style="border:2px solid black; border-radius: 20px" width="200" height="200"><br>
         <h2>${user.name}</h2>
         <br>
         Электоронная почта: <b>${user.email}</b>

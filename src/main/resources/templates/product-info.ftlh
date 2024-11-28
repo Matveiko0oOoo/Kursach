@@ -1,11 +1,11 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-            <#list images as image>
-                <li data-target="#myCarousel" data-slide-to="0" class=""></li>
-            </#list>
-        </ol>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
         <div class="carousel-inner">
             <#list images as image>
                 <div class="carousel-item <#if image.mainImage>active</#if>">
@@ -27,24 +27,26 @@
             </#list>
 
         </div>
-        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="visually-hidden">Предыдущая</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+            <span class="visually-hidden">Следующая</span>
+        </button>
     </div>
+
+
     <hr>
-    <p><h1 style="text-align: center">${product.title} | ${product.price} ₽</h1></p>
+    <p><h1 style="text-align: center">${product.title} | ${product.price} BYN</h1></p>
     <p style="text-align: center">${product.description}</p>
     <p style="text-align: center">Номер телефона продавца: <b>${authorProduct.numberPhone}</b></p>
 
     <hr>
     <p style="text-align: center">
         <a href="/user/${authorProduct.id}">
-            <img src="/static/images/avatar.png" alt="mdo" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
+            <img src="/image/avatar.png" alt="Профиль" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
         </a>
     </p>
 

@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name ="images")
 @Data
@@ -32,6 +35,8 @@ public class Image {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Product product;
 
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Document> documents = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -70,10 +75,10 @@ public class Image {
     }
 
     public void setFileType(String contentType) {
-        this.fileName = contentType;
+        this.fileType = contentType;
     }
 
-    public boolean MainImage() {
+    public boolean getMainImage() {
         return isMainImage;
     }
 

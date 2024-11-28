@@ -3,11 +3,12 @@
     <h1 style="text-align: center">Мои товары</h1>
     <hr>
     <a class="btn btn-dark mt-3 mb-3" style="text-align: center; width: 100%"
-       data-toggle="collapse" href="#collapseExample" role="button"
+       data-bs-toggle="collapse" href="#collapseExample" role="button"
        aria-expanded="true" aria-controls="collapseExample">
         Добавить новый товар
     </a>
-    <div class="collapse mb-3" id="collapseExample" style="">
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
         <form action="/product/create" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="productName">Название товара</label>
@@ -28,9 +29,9 @@
                 <select id="searchCity" required name="city" class="form-control">
                     <option value="">Город не выбран</option>
 
-                    <option value="Москва">Минск</option>
-                    <option value="Красноярск">Пинск</option>
-                    <option value="Казань">Борисов</option>
+                    <option value="Минск">Минск</option>
+                    <option value="Пинск">Пинск</option>
+                    <option value="Борисов">Борисов</option>
 
                 </select>
             </div>
@@ -60,24 +61,27 @@
 
             <button type="submit" style="width: 100%" class="btn btn-dark">Добавить</button>
         </form>
+        </div>
     </div>
     <div class="card-columns">
         <#list products as product>
             <a href="/product/${product.id}" class="product-link">
                 <div class="card text-white bg-dark my-3 product">
                     <div class="card-top">
+
                         <form action="/product/delete/${product.id}" method="post">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <button type="submit" class="btn btn-danger m-3">
+                            <button type="submit" class="btn btn-danger m-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Удалить
                             </button>
+
                         </form>
                     </div>
                     <img src="/images/${product.mainImageId}"
                          class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title">${product.title}</h5>
-                        <p class="card-text">${product.price} ₽</p>
+                        <p class="card-text">${product.price} BYN</p>
                     </div>
                     <div class="card-footer">
                         ${product.city}

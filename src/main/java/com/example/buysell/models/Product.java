@@ -33,10 +33,26 @@ public class Product {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> images = new ArrayList<>();
     private Long mainImageId;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
     private LocalDateTime dateOfCreated;
+
+    // Связь с Delivery
+    @ManyToOne
+    @JoinColumn(name = "deliveryID")
+    private Delivery delivery;
+
+    // Связь с City
+    @ManyToOne
+    @JoinColumn(name = "cityID")
+    private City cityEntity;
+
+    // Связь с Document
+    @OneToMany(mappedBy = "present", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Document> documents = new ArrayList<>();
+
 
     @PrePersist
     private void init(){
@@ -47,4 +63,5 @@ public class Product {
         image.setProduct(this);
         images.add(image);
     }
+
 }

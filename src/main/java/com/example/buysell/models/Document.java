@@ -40,16 +40,16 @@ public class Document {
     @Column(name = "documentID", length = 18)
     private String documentID;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "businessCardID")
     private User businessCard; // Предположим, что это связь с User
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "pickUPPointID")
     private PickUpPoint pickupPoint; // Предположим, что это связь с PickupPoint
 
     // Связь с Image
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "imageID")
     private Image image;
 }

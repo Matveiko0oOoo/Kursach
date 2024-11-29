@@ -26,7 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile","/image/avatar.png")
                         .permitAll() // Разрешить доступ к страницам входа и регистрации
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Доступ только для администраторов
-                        .requestMatchers("/product/create").authenticated() // Требовать аутентификации для создания товара
+                        .requestMatchers("/product/create", "/profile/edit/**").authenticated() // Требовать аутентификации для создания товара
                         .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )
                 .formLogin(customizer -> customizer

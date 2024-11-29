@@ -30,6 +30,6 @@ public class PickUpPoint {
     private Integer stars;
 
     // Связь с документами
-    @OneToMany(mappedBy = "pickupPoint", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pickupPoint", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Document> documents = new ArrayList<>();
 }

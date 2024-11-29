@@ -5,15 +5,16 @@ import com.example.buysell.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Optional;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -63,4 +64,28 @@ public class UserController {
     }
 
 
+    @GetMapping("/profile/edit/{id}")
+    public String editProfile(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+        if (user.getId().equals(id)) { // Убедитесь, что пользователь редактирует свой профиль
+            model.addAttribute("user", user);
+            return "edit-profile"; // Укажите шаблон для редактирования профиля
+        }
+        return "redirect:/profile"; // Если ID не совпадает, перенаправьте на профиль
+    }
+
+    @PostMapping("/profile/edit/{id}")
+    public String updateUserProfile(@PathVariable Long id,
+                                    @RequestParam String name,
+                                    @RequestParam String numberPhone,
+                                    @RequestParam("avatarImage") MultipartFile avatarImage,
+                                    Principal principal, Model model) {
+        Optional<User> updated = userService.updateUserProfile(id, name, numberPhone, avatarImage);
+        if (updated.isPresent()) {
+            return "redirect:/profile"; // Redirect after successful update
+        } else {
+            model.addAttribute("errorMessage", "Ошибка при обновлении профиля.");
+            return "edit-profile"; // Return to edit form with error message
+        }
+    }
 }

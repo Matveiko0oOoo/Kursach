@@ -24,8 +24,11 @@
             <#if user.email??>
                 <div class="dropdown text-end">
                     <a href="/profile">
-                        <img src="/image/avatar.png" alt="Профиль"
-                             width="32" height="32" class="rounded-circle">
+                        <#if user.avatarImage?has_content>
+                            <img src="/images/user/${user.id}" width="32" height="32" class="rounded-circle"><br>
+                        <#else>
+                            <img src="/image/avatar.png" width="32" height="32" class="rounded-circle"><br>
+                        </#if>
                     </a>
                 </div>
             <#else>

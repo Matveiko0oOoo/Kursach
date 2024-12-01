@@ -17,26 +17,39 @@
     </head>
     <body>
     <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex justify-content-between">
             <a href="/">
                 <span class="navbar-brand mb-0 h1">BUYSELL</span>
             </a>
-            <#if user.email??>
-                <div class="dropdown text-end">
-                    <a href="/profile">
-                        <#if user.avatarImage?has_content>
-                            <img src="/images/user/${user.id}" width="32" height="32" class="rounded-circle"><br>
-                        <#else>
-                            <img src="/image/avatar.png" width="32" height="32" class="rounded-circle"><br>
-                        </#if>
+            <div class="d-flex align-items-center">
+                <#if user.email??>
+                    <div class="dropdown text-end me-3">
+                        <a href="/profile">
+                            <#if user.avatarImage?has_content>
+                                <img src="/images/user/${user.id}" width="32" height="32" class="rounded-circle" alt="Профиль"><br>
+                            <#else>
+                                <img src="/image/avatar.png" width="32" height="32" class="rounded-circle" alt="Профиль"><br>
+                            </#if>
+                        </a>
+                    </div>
+                <#else>
+                    <button class="btn btn-light my-2 my-sm-0 me-3" type="button"
+                            onclick="window.location.href = '/login'">
+                        Войти
+                    </button>
+                </#if>
+                <!-- Картинка корзины -->
+                <#if user.email??>
+                <a href="/cart" class="me-2">
+                    <img src="/image/cart.png" width="32" height="32" alt="Корзина" class="rounded-circle">
+                </a>
+                </#if>
+                <#if user.email??>
+                    <a href="/delivery">
+                        <img src="/image/delivery.png" width="32" height="32" alt="История заказов" class="rounded-circle">
                     </a>
-                </div>
-            <#else>
-                <button class="btn btn-light my-2 my-sm-0" type="button"
-                        onclick="window.location.href = '/login'">
-                    Войти
-                </button>
-            </#if>
+                </#if>
+            </div>
         </div>
     </nav>
     <div class="container mt-4">

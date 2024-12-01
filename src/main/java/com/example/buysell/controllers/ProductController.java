@@ -18,12 +18,16 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
-    public String products(@RequestParam(name ="searchWorf", required = false) String title, Model model, Principal principal){
-        model.addAttribute("products", productService.listProducts(title));
+    public String products(@RequestParam(name = "searchWord", required = false) String title,
+                           @RequestParam(name = "searchCity", required = false) String city,
+                           Model model, Principal principal) {
+        model.addAttribute("products", productService.listProducts(title, city));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("searchWord", title);
+        model.addAttribute("searchCity", city);
         return "products";
     }
+
 
     @GetMapping("/product/{id}")
     public String productInfo(@PathVariable Long id, Model model, Principal principal){

@@ -23,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile","/image/avatar.png")
+                        .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile","/image/avatar.png","/image/cart.png", "/cart/**")
                         .permitAll() // Разрешить доступ к страницам входа и регистрации
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Доступ только для администраторов
                         .requestMatchers("/product/create", "/profile/edit/**").authenticated() // Требовать аутентификации для создания товара

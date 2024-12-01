@@ -34,9 +34,6 @@ public class Document {
     @Column(name = "createdDate")
     private LocalDate createdDate;
 
-    @Column(name = "payment")
-    private Boolean payment;
-
     @Column(name = "documentID", length = 18)
     private String documentID;
 

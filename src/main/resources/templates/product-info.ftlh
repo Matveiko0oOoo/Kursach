@@ -38,6 +38,14 @@
     </div>
 
 
+    <form action="/cart/add" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="hidden" name="productId" value="${product.id}">
+        <label for="quantity">Количество:</label>
+        <input type="number" name="quantity" id="quantity" value="1" min="1">
+        <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+    </form>
+
     <hr>
     <p><h1 style="text-align: center">${product.title} | ${product.price} BYN</h1></p>
     <p style="text-align: center">${product.description}</p>

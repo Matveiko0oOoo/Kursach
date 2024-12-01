@@ -25,12 +25,18 @@ public class ProductService {
     private final CityRepository cityRepository;
     private final DeliveryRepository deliveryRepository;
 
-    public List<Product> listProducts(String title) {
-        if (title != null) {
+    public List<Product> listProducts(String title, String city) {
+        if (title != null && !title.isEmpty() && city != null && !city.isEmpty()) {
+            return productRepository.findByTitleAndCity(title, city);
+        } else if (title != null && !title.isEmpty()) {
             return productRepository.findByTitle(title);
+        } else if (city != null && !city.isEmpty()) {
+            return productRepository.findByCity(city);
+        } else {
+            return productRepository.findAll();
         }
-        return productRepository.findAll();
     }
+
 
     public void saveProduct(Principal principal, Product product, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException {
         product.setUser(getUserByPrincipal(principal));

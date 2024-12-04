@@ -7,9 +7,9 @@
                 <label for="searchCity">Город</label>
                 <select id="searchCity" name="searchCity" class="form-control">
                     <option value="">Город не выбран</option>
-                    <option value="Минск">Минск</option>
-                    <option value="Пинск">Пинск</option>
-                    <option value="Борисов">Борисов</option>
+                    <#list cities as city>
+                        <option value="${city.cityName}">${city.cityName}</option>
+                    </#list>
                 </select>
             </div>
             <div class="form-group col-md-10">
@@ -25,9 +25,7 @@
         <#list products as product>
             <a href="/product/${product.id}" class="product-link">
                 <div class="card text-white bg-dark my-3 product">
-
-                    <img src="/images/${product.mainImageId}"
-                         class="card-img-top">
+                    <img src="/images/${product.mainImageId}" class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title">${product.title}</h5>
                         <p class="card-text">${product.price} BYN</p>

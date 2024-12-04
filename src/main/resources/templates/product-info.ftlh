@@ -25,7 +25,6 @@
                     </div>
                 </div>
             </#list>
-
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -37,14 +36,17 @@
         </button>
     </div>
 
-
-    <form action="/cart/add" method="post">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <input type="hidden" name="productId" value="${product.id}">
-        <label for="quantity">Количество:</label>
-        <input type="number" name="quantity" id="quantity" value="1" min="1">
-        <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-    </form>
+    <#if user?? && user.id??>
+        <form action="/cart/add" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" name="productId" value="${product.id}">
+            <label for="quantity">Количество:</label>
+            <input type="number" name="quantity" id="quantity" value="1" min="1">
+            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+        </form>
+    <#else>
+        <p style="text-align: center">Чтобы добавить товар в корзину, <a href="/login">войдите в систему</a> или <a href="/registration">зарегистрируйтесь</a>.</p>
+    </#if>
 
     <hr>
     <p><h1 style="text-align: center">${product.title} | ${product.price} BYN</h1></p>
@@ -54,7 +56,13 @@
     <hr>
     <p style="text-align: center">
         <a href="/user/${authorProduct.id}">
-            <img src="/image/avatar.png" alt="Профиль" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
+            <#if user.avatarImage?has_content>
+                <img src="/images/user/${user.id}" style="border:2px solid black; border-radius: 20px" width="30"
+                     height="30"><br>
+            <#else>
+                <img src="/image/avatar.png" style="border:2px solid black; border-radius: 20px" width="30" height="30">
+                <br>
+            </#if> ${authorProduct.name}
         </a>
     </p>
 

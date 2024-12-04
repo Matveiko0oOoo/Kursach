@@ -31,12 +31,13 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user/edit/{user}")
-    public String userEdit(@PathVariable("user") User user, Model model, Principal principal){
-        model.addAttribute("user", user);
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
-        model.addAttribute("roles", Role.values());
-        return "user-edit";
+    @GetMapping("/admin/user/edit/{userId}")
+    public String userEdit(@PathVariable("userId") Long userId, Model model, Principal principal) {
+        User user = userService.findById(userId); // Найдите пользователя по ID
+        model.addAttribute("user", user); // Добавьте пользователя в модель
+        model.addAttribute("currentUser", userService.getUserByPrincipal(principal)); // Добавьте текущего админа
+        model.addAttribute("roles", Role.values()); // Добавьте роли
+        return "user-edit"; // Возвращаем шаблон для редактирования
     }
 
     @PostMapping("/admin/user/edit")

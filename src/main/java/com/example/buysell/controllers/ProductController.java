@@ -1,7 +1,9 @@
 package com.example.buysell.controllers;
 
+import com.example.buysell.models.City;
 import com.example.buysell.models.Product;
 import com.example.buysell.models.User;
+import com.example.buysell.services.CityService;
 import com.example.buysell.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,11 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final CityService cityService;
 
     @GetMapping("/")
     public String products(@RequestParam(name = "searchWord", required = false) String title,
@@ -25,6 +29,8 @@ public class ProductController {
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("searchWord", title);
         model.addAttribute("searchCity", city);
+        List<City> cities = cityService.getAllCities();
+        model.addAttribute("cities", cities);
         return "products";
     }
 
@@ -60,6 +66,8 @@ public class ProductController {
         User user = productService.getUserByPrincipal(principal);
         model.addAttribute("user", user);
         model.addAttribute("products", user.getProducts());
+        List<City> cities = cityService.getAllCities();
+        model.addAttribute("cities", cities);
         return "my-products";
     }
 }

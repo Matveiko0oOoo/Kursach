@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface PickUpPointRepository extends JpaRepository<PickUpPoint, Long> {
     PickUpPoint findByLocation(String location);
-    List<PickUpPoint> findByStars(Integer stars);
 }

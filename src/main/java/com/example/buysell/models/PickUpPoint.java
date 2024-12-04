@@ -23,11 +23,12 @@ public class PickUpPoint {
     @JoinColumn(name = "cityID")
     private City city; // Связь с городом
 
+    @Column(name = "name", nullable = false, length = 100)
+    private String name; // Новое поле для названия пункта выдачи
+
     @Column(name = "location", length = 50)
     private String location;
 
-    @Column(name = "stars")
-    private Integer stars;
 
     // Связь с документами
     @OneToMany(mappedBy = "pickupPoint", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

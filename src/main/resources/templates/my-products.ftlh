@@ -28,9 +28,9 @@
                     <label for="searchCity">Город</label>
                     <select id="searchCity" required name="city" class="form-control">
                         <option value="">Город не выбран</option>
-                        <option value="Минск">Минск</option>
-                        <option value="Пинск">Пинск</option>
-                        <option value="Борисов">Борисов</option>
+                        <#list cities as city>
+                            <option value="${city.cityName}">${city.cityName}</option>
+                        </#list>
                     </select>
                 </div>
                 <div class="form-group">
@@ -60,8 +60,6 @@
             </form>
         </div>
     </div>
-
-
 
     <div class="card-columns">
         <#list products as product>

@@ -4,6 +4,7 @@ import com.example.buysell.models.Image;
 import com.example.buysell.models.User;
 import com.example.buysell.models.enums.Role;
 import com.example.buysell.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -104,5 +105,13 @@ public class UserService {
             return Optional.of(userRepository.save(user));
         }
         return Optional.empty();
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email); // Предполагается, что у вас есть этот метод
     }
 }

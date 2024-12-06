@@ -11,5 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByTitle(String Title);
     List<Product> findByCity(String City);
     List<Product> findByTitleAndCity(String title, String city);
-//    void deleteProduct(User user, Long id);
+
+    @Override
+    void delete(Product entity);
 }

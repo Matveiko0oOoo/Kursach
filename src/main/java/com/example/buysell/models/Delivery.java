@@ -29,15 +29,34 @@ public class Delivery {
     private City city;
 
     @Column(name = "arrivalDate")
-    private LocalDate arrivalDate;
+    private String arrivalDate;
 
     @Column(name = "admissionDate")
-    private LocalDate admissionDate;
+    private String admissionDate;
 
     @Column(name = "placeInStock", length = 30)
     private String placeInStock;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     // Связь с таблицей Document
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Document> documents = new ArrayList<>();
+
+    // Связь с таблицей CartItem
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
+    private List<CartItem> items = new ArrayList<>();
+
+    public void setItems(List<CartItem> items) {
+        this.items.clear();
+        if (items != null) {
+            this.items.addAll(items);
+        }
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
 }

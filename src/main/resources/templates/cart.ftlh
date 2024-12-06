@@ -35,8 +35,12 @@
         </table>
         <p style="text-align: center">Общая сумма: ${total} BYN</p>
         <div style="text-align: center">
-            <a href="/delivery" class="btn btn-primary">Оформить заказ</a>
+            <form action="/delivery/submit" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <button type="submit" class="btn btn-primary">Оформить заказ</button>
+            </form>
         </div>
+
         <div style="text-align: center">
             <form action="/cart/clear" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

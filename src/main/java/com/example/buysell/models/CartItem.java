@@ -11,22 +11,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Unique identifier for the CartItem
+    private Long id; // Уникальный идентификатор для элемента корзины
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // The product in the cart
+    private Product product; // Продукт в корзине
 
     @Column(name = "quantity", nullable = false)
-    private int quantity; // Quantity of the product in the cart
+    private int quantity; // Количество продукта в корзине
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // The user who owns the cart item
+    private User user; // Пользователь, которому принадлежит товар в корзине
 
-    // New constructor to accept product, quantity, and user
+    @ManyToOne
+    @JoinColumn(name = "delivery_id") // Внешний ключ для связи с доставкой
+    private Delivery delivery; // Доставка, к которой относится товар
+
+    // Конструктор для создания CartItem с продуктом, количеством и пользователем
     public CartItem(Product product, int quantity, User user) {
         this.product = product;
         this.quantity = quantity;

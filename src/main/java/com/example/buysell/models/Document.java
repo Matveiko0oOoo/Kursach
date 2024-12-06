@@ -25,7 +25,7 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "presentID")
-    private Product present; // Предположим, что это связь с Product
+    private Product present;
 
     @ManyToOne
     @JoinColumn(name = "deliveryID")
@@ -39,14 +39,17 @@ public class Document {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "businessCardID")
-    private User businessCard; // Предположим, что это связь с User
+    private User businessCard;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "pickUPPointID")
-    private PickUpPoint pickupPoint; // Предположим, что это связь с PickupPoint
+    private PickUpPoint pickupPoint;
 
-    // Связь с Image
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "imageID")
     private Image image;
+
+    @Lob
+    @Column(name = "content")
+    private String content;
 }

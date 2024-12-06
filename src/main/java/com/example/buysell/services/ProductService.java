@@ -87,7 +87,7 @@ public class ProductService {
     public void deleteProduct(User user, Long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
-            if (product.getUser().getId().equals(user.getId())) {
+            if (product.getUser().getId().equals(user.getId())) {git
                 productRepository.delete(product);
                 log.info("Product with id = {} was deleted", id);
             }
@@ -103,4 +103,6 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+
+
 }

@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile","/image/avatar.png","/image/cart.png", "/cart/**")
                         .permitAll() // Разрешить доступ к страницам входа и регистрации
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Доступ только для администраторов
+                        .requestMatchers("/admin/**", "/product/delete/**").hasRole("ADMIN") // Доступ только для администраторов
                         .requestMatchers("/product/create", "/profile/edit/**").authenticated() // Требовать аутентификации для создания товара
                         .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )

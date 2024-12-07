@@ -66,14 +66,18 @@
             <a href="/product/${product.id}" class="product-link">
                 <div class="card text-white bg-dark my-3 product">
                     <div class="card-top">
-                        <form action="/product/delete/${product.id}" method="post">
+                        <a href="/product/edit/${product.id}" class="btn btn-warning m-3">Изменить</a>
+                        <a href="/product/${product.id}" class="btn btn-info m-3" style="float: right;">Подробнее</a>
+                        <form action="/product/delete/${product.id}" method="post" style="display:inline;">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <button type="submit" class="btn btn-danger m-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Удалить
-                            </button>
+                            <button type="submit" class="btn btn-danger m-3">Удалить</button>
                         </form>
                     </div>
-                    <img src="/images/${product.mainImageId}" class="card-img-top">
+                    <#if product.mainImageId?has_content>
+                        <img src="/images/${product.mainImageId}" class="card-img-top" alt="Изображение товара">
+                    <#else>
+                        <img src="/images/avatar.png" class="card-img-top" alt="Изображение по умолчанию">
+                    </#if>
                     <div class="card-body">
                         <h5 class="card-title">${product.title}</h5>
                         <p class="card-text">${product.price} BYN</p>

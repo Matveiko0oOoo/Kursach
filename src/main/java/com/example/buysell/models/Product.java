@@ -24,13 +24,11 @@ public class Product {
     @Column(name = "description", columnDefinition = "text")
     private String description;
     @Column(name = "price")
-    private int price;
-    @Column(name = "categoryName")
-    private String categoryName;
+    private float price;
     @Column(name = "city")
     private String city;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
     private Long mainImageId;
 

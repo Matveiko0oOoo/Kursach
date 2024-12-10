@@ -1,6 +1,7 @@
 package com.example.buysell.services;
 
 import com.example.buysell.models.CartItem;
+import com.example.buysell.models.Delivery;
 import com.example.buysell.models.Product;
 import com.example.buysell.models.User;
 import com.example.buysell.repositories.CartItemRepository;
@@ -45,4 +46,9 @@ public class CartService {
     public void removeFromCart(Long itemId, User user) {
         cartItemRepository.deleteById(itemId); // Remove the cart item by ID
     }
+
+    public List<CartItem> getCartItemsByDelivery(Delivery delivery, User user) {
+        return cartItemRepository.findByDeliveryAndUser(delivery, user);  // Получаем товары корзины по delivery и user
+    }
+
 }

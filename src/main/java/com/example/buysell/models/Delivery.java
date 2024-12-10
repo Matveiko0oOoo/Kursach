@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,45 +17,38 @@ public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deliveryID")
+    @Column(name = "delivery_id")
     private Long deliveryId;
 
-    @Column(name = "deliveryName")
+    @Column(name = "delivery_name")
     private String deliveryName;
 
     @ManyToOne
-    @JoinColumn(name = "cityID")
+    @JoinColumn(name = "city_id")
     private City city;
 
-    @Column(name = "arrivalDate")
+    @Column(name = "arrival_date")
     private String arrivalDate;
 
-    @Column(name = "admissionDate")
+    @Column(name = "admission_date")
     private String admissionDate;
 
-    @Column(name = "placeInStock", length = 30)
+    @Column(name = "place_in_stock", length = 30)
     private String placeInStock;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Связь с таблицей Document
-    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Document> documents = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "delivery_product_ids", joinColumns = @JoinColumn(name = "delivery_id"))
+    @Column(name = "product_id")
+    private List<Long> productIds = new ArrayList<>(); // Хранение идентификаторов товаров
 
-    // Связь с таблицей CartItem
-    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    public void setItems(List<CartItem> items) {
-        this.items.clear();
-        if (items != null) {
-            this.items.addAll(items);
-        }
-    }
-
-    public List<CartItem> getItems() {
-        return items;
-    }
+    @ManyToOne
+    @JoinColumn(name = "pickup_point_id")
+    private PickUpPoint pickUpPoint;
 }

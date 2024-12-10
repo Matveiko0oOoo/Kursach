@@ -28,8 +28,8 @@ public class CartItem {
     private User user; // Пользователь, которому принадлежит товар в корзине
 
     @ManyToOne
-    @JoinColumn(name = "delivery_id") // Внешний ключ для связи с доставкой
-    private Delivery delivery; // Доставка, к которой относится товар
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery; // Связь с доставкой (или заказом)
 
     // Конструктор для создания CartItem с продуктом, количеством и пользователем
     public CartItem(Product product, int quantity, User user) {
@@ -38,3 +38,4 @@ public class CartItem {
         this.user = user;
     }
 }
+

@@ -16,6 +16,10 @@ public class PickUpPointService {
         return pickUpPointRepository.findAll(); // Получаем все пункты выдачи
     }
 
+    public List<PickUpPoint> getPickUpPointsByCity(Long cityId) {
+        return pickUpPointRepository.findPickUpPointsByCityId(cityId);
+    }
+
     public PickUpPoint savePickupPoint(PickUpPoint pickUpPoint) {
         return pickUpPointRepository.save(pickUpPoint);
     }

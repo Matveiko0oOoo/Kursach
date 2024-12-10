@@ -118,26 +118,16 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id).orElse(null);
-        if (product != null) {
-            // Удаляем связанные изображения
-            List<Image> images = product.getImages();
-            if (!images.isEmpty()) {
-                imageRepository.deleteAll(images); // Удаление всех изображений за один раз
-            }
+        // Удаляем связанные изображения
+        imageRepository.deleteByProductId(id);
 
-            // Удаляем документы, связанные с продуктом
-            List<Document> documents = product.getDocuments();
-            if (!documents.isEmpty()) {
-                documentRepository.deleteAll(documents); // Удаление всех документов за один раз
-            }
+        // Удаляем сам продукт
+        productRepository.deleteById(id);
+        log.info("Продукт с ID {} успешно удалён.", id);
+    }
 
-            // Удаляем сам продукт
-            productRepository.delete(product);
-            log.info("Товар с id {} и все его связи удалены", id);
-        } else {
-            log.warn("Товар с id {} не найден", id);
-        }
+    public List<Product> findProductsByIds(List<Long> ids) {
+        return productRepository.findAllById(ids); // Предполагается, что у вас есть метод для получения продуктов по идентификаторам
     }
 
     public Product getProductById(Long id) {

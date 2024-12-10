@@ -29,4 +29,8 @@ public class City {
     // Связь с таблицей Delivery
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Delivery> deliveries = new ArrayList<>();
+
+    // Новая связь с пунктами выдачи
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PickUpPoint> pickUpPoints = new ArrayList<>();
 }

@@ -26,7 +26,7 @@ public class PickUpPoint {
     @Column(name = "name", nullable = false, length = 100)
     private String name; // Новое поле для названия пункта выдачи
 
-    @Column(name = "location", length = 50)
+    @Column(name = "location", length = 100)
     private String location;
 
 

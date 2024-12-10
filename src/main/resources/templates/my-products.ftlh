@@ -68,10 +68,11 @@
                     <div class="card-top">
                         <a href="/product/edit/${product.id}" class="btn btn-warning m-3">Изменить</a>
                         <a href="/product/${product.id}" class="btn btn-info m-3" style="float: right;">Подробнее</a>
-                        <form action="/product/delete/${product.id}" method="post" style="display:inline;">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <button type="submit" class="btn btn-danger m-3">Удалить</button>
+                        <form action="/product/delete/${product.id}" method="post">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
                         </form>
+
                     </div>
                     <#if product.mainImageId?has_content>
                         <img src="/images/${product.mainImageId}" class="card-img-top" alt="Изображение товара">

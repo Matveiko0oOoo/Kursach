@@ -1,46 +1,76 @@
 package com.example.buysell.services;
 
-import com.example.buysell.models.CartItem;
-import com.example.buysell.models.Delivery;
-import com.example.buysell.models.User;
+import com.example.buysell.models.*;
 import com.example.buysell.repositories.CartItemRepository;
+import com.example.buysell.repositories.CityRepository;
 import com.example.buysell.repositories.DeliveryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class DeliveryService {
-
     private final CartItemRepository cartItemRepository;
     private final DeliveryRepository deliveryRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final CityRepository cityRepository;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    public DeliveryService(CartItemRepository cartItemRepository, DeliveryRepository deliveryRepository) {
+
+    public DeliveryService(CartItemRepository cartItemRepository,
+                           DeliveryRepository deliveryRepository,
+                           CityRepository cityRepository) {
         this.cartItemRepository = cartItemRepository;
         this.deliveryRepository = deliveryRepository;
+        this.cityRepository = cityRepository;
     }
 
-    public void createDeliveryFromCart(User user) {
-        List<CartItem> cartItems = cartItemRepository.findByUser(user);
-        if (cartItems.isEmpty()) {
-            throw new IllegalStateException("Корзина пуста.");
-        }
+    @Transactional
+    public void createDeliveryFromCart(User user, PickUpPoint pickupPoint, List<Long> selectedItemIds) {
+        // Извлекаем элементы корзины по их ID
+        List<CartItem> selectedCartItems = cartItemRepository.findByIdInAndUser(selectedItemIds, user);
 
+        // Получаем список productId из CartItem
+        List<Long> productIds = selectedCartItems.stream()
+                .map(cartItem -> cartItem.getProduct().getId())
+                .toList();
+
+        // Создаем объект доставки
         Delivery delivery = new Delivery();
         delivery.setDeliveryName("Доставка №" + UUID.randomUUID());
-        delivery.setAdmissionDate(LocalDate.now().format(formatter)); // Форматирование даты отправления
-        delivery.setArrivalDate(LocalDate.now().plusDays(3).format(formatter)); // Форматирование даты прибытия
-        delivery.setPlaceInStock(generateRandomPlaceInStock());
         delivery.setUser(user);
-        delivery.setItems(cartItems);
+        delivery.setPickUpPoint(pickupPoint);
+        delivery.setProductIds(productIds);
 
+        // Устанавливаем даты отправки и прибытия
+        int randomDaysToArrival = ThreadLocalRandom.current().nextInt(3, 6); // Диапазон: от 3 до 5 дней
+        delivery.setAdmissionDate(LocalDate.now().format(formatter)); // Текущая дата
+        delivery.setArrivalDate(LocalDate.now().plusDays(randomDaysToArrival).format(formatter)); // Дата прибытия
+
+        // Генерируем случайное место на складе
+        delivery.setPlaceInStock(generateRandomPlaceInStock());
+
+        // Сохраняем доставку
         deliveryRepository.save(delivery);
+
+        // Удаляем выбранные товары из корзины
+        cartItemRepository.deleteSelectedItems(selectedItemIds, user);
     }
+
+
+
+
+    public List<PickUpPoint> getPickupPoints(Long cityId) {
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new IllegalArgumentException("Город не найден"));
+        return city.getPickUpPoints(); // Предполагаем, что у города есть связь с пунктами выдачи
+    }
+
 
     private String generateRandomPlaceInStock() {
         Random random = new Random();

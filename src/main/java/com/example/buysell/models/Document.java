@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 
 @Entity
@@ -52,4 +53,29 @@ public class Document {
     @Lob
     @Column(name = "content")
     private String content;
+
+    // Дополнительные поля для работы с документом
+    @Transient
+    private InputStream inputStream; // Поток для скачивания
+
+    @Transient
+    private String filename; // Имя файла
+
+    @Transient
+    private String contentType; // Тип контента (например, "application/pdf")
+
+    // Методы для получения данных о документе
+    public String getFilename() {
+        return documentID + ".pdf"; // Пример для PDF, можно адаптировать под разные форматы
+    }
+
+    public String getContentType() {
+        return "application/pdf"; // Пример для PDF, можно адаптировать под разные форматы
+    }
+
+    public InputStream getInputStream() {
+        // Логика для получения InputStream на основе content или других данных
+        // Например, можно генерировать PDF на лету
+        return null; // Замените на реальную логику
+    }
 }

@@ -62,9 +62,6 @@ public class DeliveryService {
         cartItemRepository.deleteSelectedItems(selectedItemIds, user);
     }
 
-
-
-
     public List<PickUpPoint> getPickupPoints(Long cityId) {
         City city = cityRepository.findById(cityId)
                 .orElseThrow(() -> new IllegalArgumentException("Город не найден"));
@@ -76,6 +73,11 @@ public class DeliveryService {
         Random random = new Random();
         int placeNumber = random.nextInt(200) + 1;
         return "Место на складе №" + placeNumber;
+    }
+
+    public Delivery getDeliveryById(Long deliveryId) {
+        return deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with id: " + deliveryId));
     }
 
     public List<Delivery> getDeliveries(User user) {

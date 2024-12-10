@@ -23,6 +23,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     List<CartItem> findByDeliveryAndUser(Delivery delivery, User user);
 
+    List<CartItem> findByDelivery_DeliveryId(Long deliveryId); // Добавьте этот метод
+
     @Modifying
     @Transactional
     @Query("DELETE FROM CartItem c WHERE c.id IN :ids AND c.user = :user")

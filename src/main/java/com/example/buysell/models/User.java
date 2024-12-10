@@ -37,6 +37,8 @@ public class User implements UserDetails {
     private List<Product> products = new ArrayList<>();
     private LocalDateTime dateOfCreate;
 
+    @OneToMany(mappedBy = "user")
+    private List<Delivery> deliveries;
 
     @PrePersist
     private void init() {

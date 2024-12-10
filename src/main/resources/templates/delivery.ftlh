@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Ваши доставки</h1>
+    <h1 style="text-align: center">Мои покупки</h1>
     <hr>
     <#if deliveries?size == 0>
         <p style="text-align: center">У вас пока нет оформленных доставок.</p>
@@ -16,19 +16,21 @@
             </tr>
             </thead>
             <tbody>
-        <#list deliveries as delivery>
-            <tr>
-                <td>${delivery.deliveryName}</td>
-                <td>${delivery.admissionDate! "Дата не указана"}</td>
-                <td>${delivery.arrivalDate! "Дата не указана"}</td>
-                <td>${delivery.placeInStock! "Дата не указана"}</td>
-                <td>
-                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#detailsModal-${delivery.deliveryId}">
-                        Подробнее...
-                    </button>
-                </td>
-            </tr>
-        </#list>
+            <#list deliveries as delivery>
+                <tr>
+                    <td>${delivery.deliveryName}</td>
+                    <td>${delivery.admissionDate! "Дата не указана"}</td>
+                    <td>${delivery.arrivalDate! "Дата не указана"}</td>
+                    <td>${delivery.placeInStock! "Место на складе не указано"}</td>
+                    <td>
+                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#detailsModal-${delivery.deliveryId}">
+                            Подробнее...
+                        </button>
+                    </td>
+                </tr>
+            </#list>
+            </tbody>
+        </table>
 
         <#list deliveries as delivery>
             <div class="modal fade" id="detailsModal-${delivery.deliveryId}" tabindex="-1" aria-hidden="true">
@@ -59,8 +61,10 @@
 
                             <p><em>Оплата осуществляется при получении.</em></p>
                         </div>
-
                         <div class="modal-footer">
+                            <form action="/download/receipt/${delivery.deliveryId}" method="get">
+                                <button type="submit" class="btn btn-primary">Скачать чек</button>
+                            </form>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         </div>
                     </div>

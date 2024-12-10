@@ -43,7 +43,7 @@ public class Delivery {
     @ElementCollection
     @CollectionTable(name = "delivery_product_ids", joinColumns = @JoinColumn(name = "delivery_id"))
     @Column(name = "product_id")
-    private List<Long> productIds = new ArrayList<>(); // Хранение идентификаторов товаров
+    private List<Long> productIds = new ArrayList<>();
 
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
@@ -51,4 +51,12 @@ public class Delivery {
     @ManyToOne
     @JoinColumn(name = "pickup_point_id")
     private PickUpPoint pickUpPoint;
+
+    @Override
+    public String toString() {
+        return "Delivery{" +
+                "deliveryId=" + deliveryId +
+                ", deliveryName='" + deliveryName + '\'' +
+                '}';
+    }
 }

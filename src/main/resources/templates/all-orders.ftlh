@@ -8,7 +8,11 @@
             <option value="grouped">Объединить по названию</option>
         </select>
         <!-- Кнопка для скачивания PDF отчета -->
-        <a href="/orders/report" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет</a>
+        <a href="/orders/report/pdf" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет PDF</a>
+        <a href="/orders/report/xml" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет XML</a>
+        <a href="/orders/report/json" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет JSON</a>
+        <a href="/orders/report/docx" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет DOCX</a>
+        <a href="/orders/report/xlsx" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет XLSX</a>
     </div>
 
     <div id="listView">

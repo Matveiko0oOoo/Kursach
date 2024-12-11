@@ -1,5 +1,6 @@
 package com.example.buysell.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,8 @@ public class Image {
     private String fileType;
     @Column(name = "isMainImage")
     private boolean isMainImage;
+
+    @JsonIgnore
     @Column(columnDefinition = "LONGBLOB")
     private byte[] bytes;
 

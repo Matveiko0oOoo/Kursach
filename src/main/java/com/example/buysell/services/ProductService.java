@@ -161,4 +161,8 @@ public class ProductService {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Продукт не найден с id: " + productId));
     }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll(); // Получаем все продукты
+    }
 }

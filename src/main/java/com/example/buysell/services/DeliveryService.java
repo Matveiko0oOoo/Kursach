@@ -88,4 +88,8 @@ public class DeliveryService {
     public List<Delivery> getDeliveries(User user) {
         return deliveryRepository.findByUser(user);
     }
+
+    public List<Delivery> getAllDeliveries() {
+        return deliveryRepository.findAll(); // Получаем все доставки
+    }
 }

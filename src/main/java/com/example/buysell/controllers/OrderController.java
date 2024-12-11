@@ -10,6 +10,7 @@ import com.example.buysell.services.ProductService;
 import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,5 +114,32 @@ public class OrderController {
         // Генерация Excel отчета
         orderService.generateOrderReportXlsx(allOrderedProducts, totalRevenue, response);
     }
+
+    @GetMapping("/orders/analytics")
+    public ResponseEntity<Map<String, Object>> getAnalyticsData() {
+        // Получаем сгруппированные данные о продуктах
+        Map<String, Long> groupedProducts = orderService.getGroupedProductsByTitle();
+
+        // Формируем данные для диаграммы
+        Map<String, Object> response = new HashMap<>();
+        response.put("labels", groupedProducts.keySet());
+        response.put("values", groupedProducts.values());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/orders/sales-analytics")
+    public ResponseEntity<Map<String, Object>> getSalesAnalyticsData() {
+        // Получаем данные о продажах по дням
+        Map<String, Integer> salesByDate = orderService.getSalesByDate();
+
+        // Формируем данные для графика
+        Map<String, Object> response = new HashMap<>();
+        response.put("dates", salesByDate.keySet());
+        response.put("sales", salesByDate.values());
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

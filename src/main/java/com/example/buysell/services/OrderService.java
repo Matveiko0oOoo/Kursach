@@ -30,6 +30,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -310,5 +313,28 @@ public class OrderService {
         // Закрываем рабочую книгу
         workbook.close();
     }
+
+    public Map<String, Integer> getSalesByDate() {
+        List<Delivery> deliveries = deliveryRepository.findAll();
+        Map<String, Integer> salesByDate = new HashMap<>();
+
+        // Создаём DateTimeFormatter для формата "dd-MM-yyyy"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        // Для каждой доставки получаем строку и преобразуем её в LocalDate
+        for (Delivery delivery : deliveries) {
+            String arrivalDateString = delivery.getArrivalDate(); // Получаем строку
+            LocalDate deliveryDate = LocalDate.parse(arrivalDateString, formatter); // Преобразуем строку в LocalDate с указанием формата
+            String dateString = deliveryDate.toString(); // Форматируем дату как yyyy-MM-dd
+
+            salesByDate.put(dateString, salesByDate.getOrDefault(dateString, 0) + delivery.getProductIds().size());
+        }
+
+        return salesByDate;
+    }
+
+
+
+
 
 }

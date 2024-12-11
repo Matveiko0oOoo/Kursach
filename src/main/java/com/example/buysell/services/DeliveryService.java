@@ -4,30 +4,36 @@ import com.example.buysell.models.*;
 import com.example.buysell.repositories.CartItemRepository;
 import com.example.buysell.repositories.CityRepository;
 import com.example.buysell.repositories.DeliveryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class DeliveryService {
     private final CartItemRepository cartItemRepository;
     private final DeliveryRepository deliveryRepository;
     private final CityRepository cityRepository;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final ProductService productService; // добавлено поле
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-
+    @Autowired
     public DeliveryService(CartItemRepository cartItemRepository,
                            DeliveryRepository deliveryRepository,
-                           CityRepository cityRepository) {
+                           CityRepository cityRepository,
+                           ProductService productService) {
         this.cartItemRepository = cartItemRepository;
         this.deliveryRepository = deliveryRepository;
         this.cityRepository = cityRepository;
+        this.productService = productService; // инициализация
     }
 
     @Transactional
@@ -68,7 +74,6 @@ public class DeliveryService {
         return city.getPickUpPoints(); // Предполагаем, что у города есть связь с пунктами выдачи
     }
 
-
     private String generateRandomPlaceInStock() {
         Random random = new Random();
         int placeNumber = random.nextInt(200) + 1;
@@ -77,7 +82,7 @@ public class DeliveryService {
 
     public Delivery getDeliveryById(Long deliveryId) {
         return deliveryRepository.findById(deliveryId)
-                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with id: " + deliveryId));
+                .orElseThrow(() -> new IllegalArgumentException("Доставка не найдена с id: " + deliveryId));
     }
 
     public List<Delivery> getDeliveries(User user) {

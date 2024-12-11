@@ -70,4 +70,5 @@ public class DeliveryController {
     public List<PickUpPoint> getPickupPoints(@RequestParam("cityId") Long cityId) {
         return deliveryService.getPickupPoints(cityId);
     }
+
 }

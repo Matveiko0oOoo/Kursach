@@ -24,75 +24,69 @@ public class ProductService {
     private final ImageRepository imageRepository;
     private final DocumentRepository documentRepository;
 
-
-    // В ProductService
     public List<Product> listProducts(String title, String city, String sortOrder) {
-        List<Product> products;
-
-        // Поиск по названию
-        if (title != null && !title.isEmpty()) {
-            products = productRepository.findByTitleContainingIgnoreCase(title);
-        } else {
-            products = productRepository.findAll();
-        }
+        List<Product> products = title != null && !title.isEmpty()
+                ? productRepository.findByTitleContainingIgnoreCase(title)
+                : productRepository.findAll();
 
         // Фильтрация по городу
         if (city != null && !city.isEmpty()) {
             products = products.stream()
-                    .filter(product -> product.getCity().equalsIgnoreCase(city))
-                    .collect(Collectors.toList()); // Используем Collectors.toList()
+                    .filter(product -> product.getCity() != null && product.getCity().equalsIgnoreCase(city))
+                    .collect(Collectors.toList());
         }
 
         // Сортировка
-        if ("priceAsc".equals(sortOrder)) {
-            products.sort(Comparator.comparing(Product::getPrice));
-        } else if ("priceDesc".equals(sortOrder)) {
-            products.sort(Comparator.comparing(Product::getPrice).reversed());
-        } else if ("nameAsc".equals(sortOrder)) {
-            products.sort(Comparator.comparing(Product::getTitle));
-        } else if ("nameDesc".equals(sortOrder)) {
-            products.sort(Comparator.comparing(Product::getTitle).reversed());
+        if (sortOrder != null) {
+            switch (sortOrder) {
+                case "priceAsc":
+                    products.sort(Comparator.comparing(Product::getPrice));
+                    break;
+                case "priceDesc":
+                    products.sort(Comparator.comparing(Product::getPrice).reversed());
+                    break;
+                case "nameAsc":
+                    products.sort(Comparator.comparing(Product::getTitle));
+                    break;
+                case "nameDesc":
+                    products.sort(Comparator.comparing(Product::getTitle).reversed());
+                    break;
+            }
         }
 
         return products;
     }
 
-
+    // Сохранение продукта с изображениями
+    @Transactional
     public void saveProduct(Principal principal, Product product, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException {
         product.setUser(getUserByPrincipal(principal));
 
-        // Если у продукта уже есть изображения, удаляем их перед добавлением новых
+        // Удаляем старые изображения, если они есть
         if (!product.getImages().isEmpty()) {
             imageRepository.deleteAll(product.getImages());
             product.getImages().clear();
         }
 
         List<Image> newImages = new ArrayList<>();
-        if (file1 != null && file1.getSize() > 0) {
-            newImages.add(toImageEntity(file1));
-        }
-        if (file2 != null && file2.getSize() > 0) {
-            newImages.add(toImageEntity(file2));
-        }
-        if (file3 != null && file3.getSize() > 0) {
-            newImages.add(toImageEntity(file3));
-        }
+        addImageIfPresent(file1, newImages);
+        addImageIfPresent(file2, newImages);
+        addImageIfPresent(file3, newImages);
 
-        // Привязываем новые изображения
+        // Привязываем новые изображения к продукту
+        for (Image image : newImages) {
+            image.setProduct(product);
+        }
+        product.getImages().addAll(newImages);
+
+        // Сохраняем продукт без mainImageId, чтобы изображения получили свои ID
+        productRepository.save(product);
+
+        // Устанавливаем первое изображение как главное
         if (!newImages.isEmpty()) {
-            for (Image image : newImages) {
-                image.setProduct(product);
-            }
-            product.getImages().addAll(newImages);
-
-            // Сохраняем продукт без mainImageId, чтобы изображения получили свои ID
-            productRepository.save(product);
-
-            // Устанавливаем первое изображение как главное
             Image mainImage = newImages.get(0);
             mainImage.setMainImage(true);
-            imageRepository.saveAll(newImages); // Сохраняем новые изображения с привязкой к продукту
-
+            imageRepository.saveAll(newImages);
             product.setMainImageId(mainImage.getId());
         }
 
@@ -100,6 +94,7 @@ public class ProductService {
         productRepository.save(product); // Повторное сохранение с обновлённым mainImageId
     }
 
+    // Получение пользователя по Principal
     public User getUserByPrincipal(Principal principal) {
         if (principal == null) {
             return new User();
@@ -107,6 +102,7 @@ public class ProductService {
         return userRepository.findByEmail(principal.getName());
     }
 
+    // Преобразование MultipartFile в Image
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
         image.setName(file.getName());
@@ -117,46 +113,52 @@ public class ProductService {
         return image;
     }
 
+    // Удаление продукта по ID
     public void deleteProduct(Long id) {
-        // Удаляем связанные изображения
-        imageRepository.deleteByProductId(id);
-
-        // Удаляем сам продукт
-        productRepository.deleteById(id);
+        imageRepository.deleteByProductId(id); // Удаляем связанные изображения
+        productRepository.deleteById(id); // Удаляем сам продукт
         log.info("Продукт с ID {} успешно удалён.", id);
     }
 
+    // Поиск продуктов по списку ID
     public List<Product> findProductsByIds(List<Long> ids) {
-        return productRepository.findAllById(ids); // Предполагается, что у вас есть метод для получения продуктов по идентификаторам
+        return productRepository.findAllById(ids);
     }
 
+    // Получение продукта по ID
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
 
+    // Исправление сиротских изображений
     public void fixOrphanImages(Long productId) {
-        // Получаем продукт по ID
         Product product = productRepository.findById(productId).orElse(null);
-
         if (product == null) {
-            log.error("Product with id {} not found", productId);
+            log.error("Продукт с id {} не найден", productId);
             return;
         }
 
-        // Получаем все изображения, связанные с продуктом
         List<Image> productImages = product.getImages();
-
-        // Получаем все изображения из базы данных
         List<Image> allImages = imageRepository.findAll();
 
-        // Находим изображения, которые не связаны с продуктом
         for (Image image : allImages) {
             if (image.getProduct() == null || !productImages.contains(image)) {
-                // Если изображение не связано с продуктом, удаляем его
                 imageRepository.delete(image);
-                log.info("Orphan image with id {} deleted", image.getId());
+                log.info("Сиротское изображение с id {} удалено", image.getId());
             }
         }
     }
 
+    // Метод для добавления изображения, если файл присутствует
+    private void addImageIfPresent(MultipartFile file, List<Image> newImages) throws IOException {
+        if (file != null && file.getSize() > 0) {
+            newImages.add(toImageEntity(file));
+        }
+    }
+
+    // Метод для поиска продукта по ID
+    public Product findById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Продукт не найден с id: " + productId));
+    }
 }

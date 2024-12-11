@@ -4,13 +4,17 @@ import com.example.buysell.models.Product;
 import com.example.buysell.models.User;
 import com.example.buysell.services.OrderService;
 import com.example.buysell.services.UserService;
+import com.itextpdf.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OrderController {
@@ -26,16 +30,39 @@ public class OrderController {
 
     @GetMapping("/orders/all")
     public String getAllOrders(Model model, Principal principal) {
-        // Получение текущего пользователя
         if (principal != null) {
             User currentUser = userService.findByEmail(principal.getName());
-            model.addAttribute("user", currentUser); // Передача пользователя в модель
+            model.addAttribute("user", currentUser);
         }
 
-        // Получаем все заказанные товары
         List<Product> allOrderedProducts = orderService.getAllOrderedProducts();
-        model.addAttribute("products", allOrderedProducts);
+        Map<String, Long> groupedProducts = orderService.getGroupedProductsByTitle();
+        double totalRevenue = orderService.calculateTotalRevenue();
+        int totalQuantity = orderService.calculateTotalQuantity();
 
-        return "all-orders"; // Шаблон отображения заказов
+        model.addAttribute("products", allOrderedProducts);
+        model.addAttribute("groupedProducts", groupedProducts);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("totalQuantity", totalQuantity);
+
+        return "all-orders";
     }
+
+    @GetMapping("/orders/report")
+    public void generateReport(HttpServletResponse response) throws IOException {
+        List<Product> allOrderedProducts = orderService.getAllOrderedProducts();
+        double totalRevenue = orderService.calculateTotalRevenue();
+
+        try {
+            orderService.generateOrderReport(allOrderedProducts, totalRevenue, response);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Ошибка при генерации PDF отчета.");
+        }
+    }
+
+
+
+
 }

@@ -18,7 +18,7 @@
         <#if products?size == 0>
             <p style="text-align: center">Заказов пока нет.</p>
         <#else>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-success" style="border-radius: 10px; overflow: hidden;">
                 <thead>
                 <tr>
                     <th>Название товара</th>
@@ -35,13 +35,14 @@
                 </tbody>
             </table>
         </#if>
+        <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
     </div>
 
     <div id="groupedView" style="display: none;">
         <#if groupedProducts?size == 0>
             <p style="text-align: center">Заказов пока нет.</p>
         <#else>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-success" style="border-radius: 10px; overflow: hidden;">
                 <thead>
                 <tr>
                     <th>Название товара</th>
@@ -58,6 +59,8 @@
                 </tbody>
             </table>
         </#if>
+        <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
+
     </div>
 
     <hr>
@@ -68,12 +71,12 @@
         </div>
         <button id="analyticsButton" class="btn btn-info">Аналитика</button>
     </div>
-
+<hr>
     <div id="analyticsContainer" style="display: none; text-align: center; margin-top: 20px;">
         <h3>Статистика заказов</h3>
         <canvas id="analyticsChart" width="100" height="100"></canvas>
     </div>
-
+    <hr>
     <button id="salesChartButton" class="btn btn-info" style="margin-left: 20px;">График продаж</button>
     <div id="salesChartContainer" style="display: none; text-align: center; margin-top: 20px;">
         <h3>График продаж</h3>

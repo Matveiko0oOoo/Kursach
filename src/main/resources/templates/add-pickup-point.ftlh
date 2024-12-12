@@ -12,64 +12,80 @@
     </head>
     <body>
     <div class="container mt-5">
-        <h1>Действующие пункты выдачи</h1>
+        <h1 style="text-align: center">Действующие пункты выдачи</h1>
 
         <!-- Кнопка для добавления нового пункта выдачи -->
-        <a class="btn btn-dark mt-3 mb-3" data-bs-toggle="collapse" href="#collapseAddPickup" role="button" aria-expanded="false" aria-controls="collapseAddPickup">
+        <a class="btn btn-dark mt-3 mb-3 w-100" data-bs-toggle="collapse" href="#collapseAddPickup" role="button" aria-expanded="false" aria-controls="collapseAddPickup">
             Добавить новый пункт выдачи
         </a>
 
         <div class="collapse" id="collapseAddPickup">
             <div class="card card-body">
-                <form action="/pickup/points/add" method="post">
+                <form action="/pickup/points/add" method="post" onsubmit="return validateForm()">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> <!-- Поле CSRF -->
                     <div class="form-group">
                         <label for="name">Название пункта выдачи:</label>
-                        <input type="text" id="name" name="name" required class="form-control">
+                        <input type="text" id="name" name="name" required class="form-control mb-3">
+                        <small id="nameError" class="text-danger"></small>
                     </div>
                     <div class="form-group">
                         <label for="location">Местоположение:</label>
-                        <input type="text" id="location" name="location" required class="form-control">
+                        <input type="text" id="location" name="location" required class="form-control mb-3">
+                        <small id="locationError" class="text-danger"></small>
                     </div>
                     <div class="form-group">
                         <label for="city">Город:</label>
-                        <select id="city" name="city.id" required class="form-control">
+                        <select id="city" name="city.id" required class="form-control mb-3">
                             <#list cities as city>
                                 <option value="${city.id}">${city.cityName}</option>
                             </#list>
                         </select>
                     </div>
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn btn-primary">Добавить пункт выдачи</button>
+                    <button type="submit" class="btn btn-dark w-100">Добавить пункт выдачи</button>
                 </form>
             </div>
         </div>
 
         <hr>
 
-        <!-- Список действующих пунктов выдачи -->
-        <h2>Существующие пункты выдачи:</h2>
-        <ul class="list-group">
+        <h2 style="text-align: center">Существующие пункты выдачи:</h2>
+        <table class="table table-success" style="border-radius: 10px; overflow: hidden;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Местоположение</th>
+                <th>Город</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
             <#if pickupPoints?has_content>
                 <#list pickupPoints as point>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <strong>${point.name!}</strong> - ${point.location!}, ${point.city.cityName!}
-                        </span>
-                        <!-- Кнопка для удаления, которая вызывает модальное окно -->
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deletePickupModal" data-id="${point.pickUpPointId}" data-name="${point.name}">
-                            Удалить
-                        </button>
-                    </li>
+                    <tr>
+                        <td>${point.pickUpPointId}</td>
+                        <td>${point.name}</td>
+                        <td>${point.location}</td>
+                        <td>${point.city.cityName}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deletePickupModal" data-id="${point.pickUpPointId}" data-name="${point.name}">
+                                Удалить
+                            </button>
+                        </td>
+                    </tr>
                 </#list>
             <#else>
-                <li class="list-group-item">Нет действующих пунктов выдачи.</li>
+                <tr>
+                    <td colspan="5" class="text-center">Нет действующих пунктов выдачи.</td>
+                </tr>
             </#if>
-        </ul>
+            </tbody>
+        </table>
 
         <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
     </div>
 
-    <!-- Модальное окно для подтверждения удаления с уменьшенным размером -->
+    <!-- Модальное окно для подтверждения удаления -->
     <div class="modal fade" id="deletePickupModal" tabindex="-1" aria-labelledby="deletePickupModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="max-width: 400px; width: 100%;">
             <div class="modal-content" style="border-radius: 10px;">
@@ -88,17 +104,38 @@
     </div>
 
     <script>
-        // Когда кнопка "Удалить" нажата, заполняем модальное окно нужными данными
         $('#deletePickupModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
-            var pickUpPointId = button.data('id'); // Получаем ID пункта выдачи
-            var pickUpPointName = button.data('name'); // Получаем название пункта выдачи
+            var button = $(event.relatedTarget);
+            var pickUpPointId = button.data('id');
+            var pickUpPointName = button.data('name');
 
-            // Обновляем содержимое модального окна
             var modal = $(this);
             modal.find('#pickupNameToDelete').text(pickUpPointName);
-            modal.find('#confirmDeleteButton').attr('href', '/pickup/points/delete/' + pickUpPointId); // Устанавливаем ссылку для подтверждения удаления
+            modal.find('#confirmDeleteButton').attr('href', '/pickup/points/delete/' + pickUpPointId);
         });
+
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const location = document.getElementById('location').value;
+            const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+            let valid = true;
+
+            // Сброс ошибок
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('locationError').textContent = '';
+
+            if (specialCharPattern.test(name)) {
+                document.getElementById('nameError').textContent = "Название не должно содержать специальные символы.";
+                valid = false;
+            }
+
+            if (specialCharPattern.test(location)) {
+                document.getElementById('locationError').textContent = "Местоположение не должно содержать специальные символы.";
+                valid = false;
+            }
+
+            return valid; // Возвращаем результат валидации
+        }
     </script>
 
     </body>

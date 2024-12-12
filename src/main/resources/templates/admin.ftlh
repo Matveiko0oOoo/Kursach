@@ -1,7 +1,7 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
     `<h1 style="text-align: center">Панель администратора</h1><hr>
-    <table class="table table-hover table-dark">
+    <table class="table table-hover table-success" style="border-radius: 10px; overflow: hidden;">
         <tr>
             <th scope="col">Email</th>
             <th scope="col">Номер телефона</th>
@@ -30,4 +30,7 @@
             <h3>Пользователей нет</h3>
         </#list>
     </table>
+
+    <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
+
 </@t.template>

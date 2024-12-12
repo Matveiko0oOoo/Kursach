@@ -1,9 +1,56 @@
-.product:hover {
-    transition: 0.5s;
-    transform: scale(1.02);
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Заставляет карточки занимать всю высоту родительского контейнера */
+    border: 1px solid #ddd; /* Добавляет рамку вокруг карточки */
+    border-radius: 5px; /* Закругляет углы карточки */
+    overflow: hidden; /* Скрывает элементы, выходящие за пределы карточки */
+    transition: box-shadow 0.3s; /* Плавный переход для тени */
 }
 
-.product-link {
-    color: #000 !important;
-    text-decoration: none
+.card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Добавляет тень при наведении */
 }
+
+.card-body {
+    flex-grow: 1; /* Позволяет телу карточки занимать доступное пространство */
+    padding: 20px; /* Увеличивает отступы внутри карточки */
+}
+
+.product {
+    transition: transform 0.5s; /* Плавный эффект увеличения */
+}
+
+.product:hover {
+    transform: scale(1.02); /* Эффект увеличения при наведении */
+}
+
+.product-image {
+    max-height: 400px; /* Максимальная высота для изображений */
+    width: 100%; /* Ширина 100% для адаптивности */
+    object-fit: contain; /* Сохраняет пропорции изображения */
+    border-radius: 10px; /* Закругленные углы */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(128, 128, 128, 0.5); /* Полупрозрачный серый фон */
+    border-radius: 50%; /* Закругление для создания круга */
+}
+
+.carousel-control-prev:hover .carousel-control-prev-icon,
+.carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(128, 128, 128, 0.8); /* Более темный серый при наведении */
+}
+
+body {
+    background-color: #f8f9fa; /* Светлый фон */
+    background-image: url('/image/girlanda.JPG'); /* Замените на путь к вашему изображению */
+    background-size: cover; /* Включите масштабирование для заполнения экрана */
+    background-position: center; /* Центрируйте изображение */
+    background-repeat: no-repeat; /* Не повторяйте изображение */
+}
+
+/*/image/girlanda.JPG*/
+/*/image/pechenki.JPG*/
+/*/image/shapochki.JPG*/

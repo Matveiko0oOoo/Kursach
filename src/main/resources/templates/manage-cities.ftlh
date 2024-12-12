@@ -6,7 +6,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Управление городами</title>
-        <!-- Bootstrap подключен в вашем шаблоне, лишнее удалено -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     </head>
@@ -15,7 +14,7 @@
         <h1 style="text-align: center">Города, по которым осуществляется доставка</h1>
 
         <!-- Кнопка для добавления нового города -->
-        <a class="btn btn-dark mt-3 mb-3" data-bs-toggle="collapse" href="#collapseAddCity" role="button" aria-expanded="false" aria-controls="collapseAddCity" style="display: block; margin: 0 auto; width: 200px; text-align: center;">
+        <a class="btn btn-dark mt-3 mb-3 w-100" data-bs-toggle="collapse" href="#collapseAddCity" role="button" aria-expanded="false" aria-controls="collapseAddCity" style="text-align: center;">
             Добавить новый город
         </a>
 
@@ -25,9 +24,9 @@
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> <!-- Поле CSRF -->
                     <div class="form-group">
                         <label for="cityName">Название города</label>
-                        <input type="text" class="form-control" id="cityName" name="cityName" required>
+                        <input type="text" class="form-control mb-3" id="cityName" name="cityName" required>
                     </div>
-                    <button type="submit" class="btn btn-dark" style="width: 100%;">Добавить город</button>
+                    <button type="submit" class="btn btn-dark w-100">Добавить город</button>
                 </form>
             </div>
         </div>
@@ -35,7 +34,7 @@
         <hr>
 
         <h2 style="text-align: center">Существующие города</h2>
-        <table class="table">
+        <table class="table table-success" style="border-radius: 10px; overflow: hidden;">
             <thead>
             <tr>
                 <th>ID</th>
@@ -49,7 +48,6 @@
                     <td>${city.id}</td>
                     <td>${city.cityName}</td>
                     <td>
-                        <!-- Кнопка для удаления города, которая открывает модальное окно -->
                         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteCityModal" data-id="${city.id}" data-name="${city.cityName}">
                             Удалить
                         </button>
@@ -81,16 +79,14 @@
     </div>
 
     <script>
-        // Когда кнопка "Удалить" нажата, заполняем модальное окно нужными данными
         $('#deleteCityModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
-            var cityId = button.data('id'); // Получаем ID города
-            var cityName = button.data('name'); // Получаем название города
+            var button = $(event.relatedTarget);
+            var cityId = button.data('id');
+            var cityName = button.data('name');
 
-            // Обновляем содержимое модального окна
             var modal = $(this);
             modal.find('#cityNameToDelete').text(cityName);
-            modal.find('#confirmDeleteButton').attr('href', '/admin/cities/delete/' + cityId); // Устанавливаем ссылку для подтверждения удаления
+            modal.find('#confirmDeleteButton').attr('href', '/admin/cities/delete/' + cityId);
         });
     </script>
 

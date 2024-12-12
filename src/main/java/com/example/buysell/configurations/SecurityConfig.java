@@ -23,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile","/image/avatar.png","/image/cart.png", "/cart/**")
+                        .requestMatchers("/", "/product/**", "/login", "/registration", "/images/**", "/user/**", "/static/**", "/profile", "/image/avatar.png", "/image/cart.png","/image/CART_onProduct.png", "/cart/**")
                         .permitAll() // Разрешить доступ к страницам входа и регистрации
                         .requestMatchers("/admin/**", "/product/delete/**").hasRole("ADMIN") // Доступ только для администраторов
                         .requestMatchers("/product/create", "/profile/edit/**").authenticated() // Требовать аутентификации для создания товара
@@ -31,11 +31,14 @@ public class SecurityConfig {
                 )
                 .formLogin(customizer -> customizer
                         .loginPage("/login") // Укажите URL для страницы входа
-                        .permitAll()) // Разрешить доступ к странице входа
+                        .failureUrl("/login?error=true") // Укажите URL для обработки ошибок
+                        .permitAll() // Разрешить доступ к странице входа
+                )
                 .logout(logout -> logout
                         .permitAll()); // Разрешить доступ к выходу
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

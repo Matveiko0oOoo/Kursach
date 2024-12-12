@@ -5,7 +5,7 @@
     <#if deliveries?size == 0>
         <p style="text-align: center">У вас пока нет оформленных доставок.</p>
     <#else>
-        <table class="table">
+        <table class="table table-success table-striped" style="border-radius: 10px; overflow: hidden;">
             <thead>
             <tr>
                 <th>Название доставки</th>

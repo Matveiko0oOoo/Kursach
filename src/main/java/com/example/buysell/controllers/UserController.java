@@ -40,13 +40,13 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String createUser(User user, Model model){
-        if (!userService.createUser(user)) {
-            model.addAttribute("errorMassage", "Пользователь с email: "+user.getEmail()+" уже существует");
-            return "registration";
+    public String createUser(User user, Model model) {
+        if (!userService.createUser(user, model)) {
+            return "registration"; // Вернуться к форме регистрации с ошибкой
         }
         return "redirect:/login";
     }
+
 
     @GetMapping("/user/{user}")
     public String userInfo(@PathVariable("user") User user, Model model, Principal principal){

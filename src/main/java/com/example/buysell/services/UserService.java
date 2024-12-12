@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,9 +24,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean createUser(User user){
+    public boolean createUser(User user, Model model) {
         String email = user.getEmail();
-        if (userRepository.findByEmail(email)!= null){
+        if (userRepository.findByEmail(email) != null) {
+            model.addAttribute("errorMessage", "Пользователь с email: " + email + " уже существует");
+            return false;
+        }
+        if (!isPasswordValid(user.getPassword())) {
+            model.addAttribute("errorMessage", "Пароль должен быть длиннее 8 символов, содержать буквы и цифры, и не иметь 5 одинаковых символов подряд.");
             return false;
         }
         user.setActive(true);
@@ -35,6 +41,7 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+
 
     public List<User> list(){
         return userRepository.findAll();
@@ -114,4 +121,12 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email); // Предполагается, что у вас есть этот метод
     }
+
+    public boolean isPasswordValid(String password) {
+        if (password.length() < 8) return false; // Минимальная длина
+        if (!password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) return false; // Буквы и цифры
+        if (password.matches(".*(.)\\1{4,}.*")) return false; // Не более 4 подряд одинаковых символов
+        return true;
+    }
+
 }

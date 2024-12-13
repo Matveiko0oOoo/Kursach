@@ -45,12 +45,12 @@
 
 body {
     background-color: #f8f9fa; /* Светлый фон */
-    background-image: url('/image/girlanda.JPG'); /* Замените на путь к вашему изображению */
+    background-image: url('/image/gir.png'); /* Замените на путь к вашему изображению */
     background-size: cover; /* Включите масштабирование для заполнения экрана */
     background-position: center; /* Центрируйте изображение */
     background-repeat: no-repeat; /* Не повторяйте изображение */
 }
 
-/*/image/girlanda.JPG*/
-/*/image/pechenki.JPG*/
-/*/image/shapochki.JPG*/
+/*/image/gir.png*/
+/*/image/pechenki.png*/
+/*/image/shapochki.png*/

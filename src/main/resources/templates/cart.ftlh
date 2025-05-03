@@ -31,7 +31,7 @@
             </#list>
             </tbody>
         </table>
-<hr>
+        <hr>
         <p style="text-align: center">Общая сумма: ${total} BYN</p>
 
         <div style="display: flex; justify-content: space-between;">
@@ -92,7 +92,7 @@
         <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="/delivery/submit" method="post">
+                    <form action="/delivery/submit" method="post" onsubmit="return validateForm()">
                         <div class="modal-header">
                             <h5 class="modal-title" id="orderModalLabel">Оформление заказа</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -129,6 +129,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Уведомления -->
         <div id="notification" style="display: none;">
             <div class="alert alert-success d-flex align-items-center" role="alert">
@@ -174,5 +175,15 @@
                 notification.style.display = 'none';
             }, 3000); // Скрыть уведомление через 3 секунды
         };
+
+        // Проверка выбора товаров для оформления заказа
+        function validateForm() {
+            const checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
+            if (checkboxes.length === 0) {
+                alert('Пожалуйста, выберите хотя бы один товар для заказа.');
+                return false; // Предотвращает отправку формы
+            }
+            return true; // Позволяет отправить форму
+        }
     </script>
 </@t.template>

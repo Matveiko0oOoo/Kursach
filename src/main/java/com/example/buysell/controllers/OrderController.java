@@ -10,17 +10,20 @@ import com.example.buysell.services.ProductService;
 import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class OrderController {
@@ -40,7 +43,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/all")
-    public String getAllOrders(Model model, Principal principal) {
+    public String getAllOrders(Model model, Principal principal, @RequestParam(required = false) String viewMode) {
         if (principal != null) {
             User currentUser = userService.findByEmail(principal.getName());
             model.addAttribute("user", currentUser);
@@ -49,19 +52,24 @@ public class OrderController {
         // Получаем все заказанные продукты
         List<Product> allOrderedProducts = orderService.getAllOrderedProducts();
         // Группируем продукты по названию и считаем их количество
-        Map<String, Long> groupedProducts = orderService.getGroupedProductsByTitle();
-        // Рассчитываем общую прибыль и количество товаров
+        Map<String, Long> groupedProducts = orderService.getIssuedProductsGroupedByTitle();
+
         double totalRevenue = orderService.calculateTotalRevenue();
         int totalQuantity = orderService.calculateTotalQuantity();
+
+        // Получаем только доставки с isIssued = false
+        List<Delivery> deliveries = deliveryService.getAllDeliveries(); // Здесь ваш метод уже корректен
 
         // Добавляем в модель для отображения на странице
         model.addAttribute("products", allOrderedProducts);
         model.addAttribute("groupedProducts", groupedProducts);
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("totalQuantity", totalQuantity);
+        model.addAttribute("deliveries", deliveries);
 
         return "all-orders";
     }
+
 
     @GetMapping("/orders/report/pdf")
     public void generateReport(HttpServletResponse response) throws IOException {
@@ -89,9 +97,8 @@ public class OrderController {
 
     @GetMapping("/orders/report/json")
     public void downloadJsonReport(HttpServletResponse response) throws IOException {
-        // Получаем все доставки и все продукты
-        List<Delivery> deliveries = deliveryService.getAllDeliveries();  // Получение всех доставок
-        List<Product> products = productService.getAllProducts(); // Получение всех продуктов
+        List<Delivery> deliveries = deliveryService.getAllDeliveries();
+        List<Product> products = productService.getAllProducts();
 
         // Генерация JSON отчета
         orderService.generateOrderJsonReport(deliveries, products, response);
@@ -117,10 +124,8 @@ public class OrderController {
 
     @GetMapping("/orders/analytics")
     public ResponseEntity<Map<String, Object>> getAnalyticsData() {
-        // Получаем сгруппированные данные о продуктах
         Map<String, Long> groupedProducts = orderService.getGroupedProductsByTitle();
 
-        // Формируем данные для диаграммы
         Map<String, Object> response = new HashMap<>();
         response.put("labels", groupedProducts.keySet());
         response.put("values", groupedProducts.values());
@@ -141,5 +146,15 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+
+    @PostMapping("/orders/issue/{deliveryId}")
+    public ResponseEntity<String> issueDelivery(@PathVariable Long deliveryId) {
+        try {
+            deliveryService.issueDelivery(deliveryId);
+            return ResponseEntity.ok("Доставка успешно выдана.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 }

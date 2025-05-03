@@ -1,0 +1,14 @@
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Номер доставки</th>
+        <th>Дата прибытия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="delivery : ${issuedDeliveries}">
+        <td th:text="${delivery.deliveryId}"></td>
+        <td th:text="${delivery.arrivalDate}"></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,14 @@
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Название товара</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.title}"></td>
+        <td th:text="${product.price}"></td>
+    </tr>
+    </tbody>
+</table>

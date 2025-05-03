@@ -50,12 +50,12 @@
                                         <input type="hidden" name="productId" value="${product.id}">
                                         <input type="hidden" name="quantity" value="1"> <!-- Добавляем поле для количества -->
                                         <button type="submit" class="add-to-cart" style="border: none; background: none; cursor: pointer;">
-                                            <img src="/image/CART_onProduct.png" alt="Добавить в корзину" style="width: 24px; height: 24px;">
+                                            <img src="/image/CCart.png" alt="Добавить в корзину" style="width: 24px; height: 24px;">
                                         </button>
                                     </form>
                                 <#else>
                                     <span class="text-danger" style="cursor: pointer;" onclick="alert('Пожалуйста, войдите в систему, чтобы добавить товары в корзину.')">
-                                    <img src="/image/CART_onProduct.png" alt="Добавить в корзину" style="width: 24px; height: 24px;">
+                                    <img src="/image/CCart.png" alt="Добавить в корзину" style="width: 24px; height: 24px;">
                                 </span>
                                 </#if>
                             </div>

@@ -1,0 +1,14 @@
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Название товара</th>
+        <th>Количество</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry : ${groupedProducts.entrySet()}">
+        <td th:text="${entry.key}"></td>
+        <td th:text="${entry.value}"></td>
+    </tr>
+    </tbody>
+</table>

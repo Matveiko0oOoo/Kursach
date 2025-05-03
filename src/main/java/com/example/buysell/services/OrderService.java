@@ -333,8 +333,16 @@ public class OrderService {
         return salesByDate;
     }
 
+    public List<Delivery> getIssuedDeliveries() {
+        return deliveryRepository.findByIsIssuedTrue(); // Предполагается, что у вас есть соответствующий метод в репозитории
+    }
 
-
-
+    public Map<String, Long> getIssuedProductsGroupedByTitle() {
+        return getIssuedDeliveries().stream()
+                .flatMap(delivery -> delivery.getProductIds().stream())
+                .map(productId -> productRepository.findById(productId)
+                        .orElseThrow(() -> new IllegalArgumentException("Продукт с ID " + productId + " не найден")))
+                .collect(Collectors.groupingBy(Product::getTitle, Collectors.counting()));
+    }
 
 }

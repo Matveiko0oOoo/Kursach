@@ -23,8 +23,8 @@
             </a>
             <div class="d-flex align-items-center">
                 <#if user.email??>
-                    <div class="dropdown text-end me-3">
-                        <a href="/profile">
+                    <div class="dropdown text-end me-1">
+                        <a href="/profile" class="me-3">
                             <#if user.avatarImage?has_content>
                                 <img src="/images/user/${user.id}" width="32" height="32" class="rounded-circle" alt="Профиль"><br>
                             <#else>
@@ -40,14 +40,22 @@
                 </#if>
                 <!-- Картинка корзины -->
                 <#if user.email??>
-                <a href="/cart" class="me-2">
-                    <img src="/image/cart.png" width="32" height="32" alt="Корзина" class="rounded-circle">
-                </a>
+                    <a href="/cart" class="me-3">
+                        <img src="/image/cart.png" width="32" height="32" alt="Корзина" class="rounded-circle">
+                    </a>
                 </#if>
                 <#if user.email??>
-                    <a href="/delivery">
+                    <a href="/delivery" class="me-3">
                         <img src="/image/delivery.png" width="32" height="32" alt="История заказов" class="rounded-circle">
                     </a>
+                </#if>
+                <#if user.email??>
+                    <form action="/logout" method="post" class="d-inline">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <button type="submit" class="btn rounded-circle btn-light" style="width: 32px; height: 32px; padding: 0; border: none;">
+                            <img src="/image/exit.png" width="32" height="32" alt="Выход" class="rounded-circle" style="width: 100%; height: 100%;">
+                        </button>
+                    </form>
                 </#if>
             </div>
         </div>

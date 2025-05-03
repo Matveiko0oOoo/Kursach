@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "delivery")
@@ -52,6 +53,17 @@ public class Delivery {
     @JoinColumn(name = "pickup_point_id")
     private PickUpPoint pickUpPoint;
 
+    @Column(name = "is_issued")
+    private boolean isIssued = false;
+
+    public boolean isIssued() {
+        return isIssued;
+    }
+
+    public void setIssued(boolean issued) {
+        isIssued = issued;
+    }
+
     @Override
     public String toString() {
         return "Delivery{" +
@@ -59,4 +71,5 @@ public class Delivery {
                 ", deliveryName='" + deliveryName + '\'' +
                 '}';
     }
+
 }

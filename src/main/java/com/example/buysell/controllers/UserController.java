@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -88,4 +89,5 @@ public class UserController {
             return "edit-profile"; // Return to edit form with error message
         }
     }
+
 }

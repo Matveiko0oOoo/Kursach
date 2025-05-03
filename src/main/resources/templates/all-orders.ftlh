@@ -1,12 +1,13 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Все заказы</h1>
+    <h1 style="text-align: center">Заказы</h1>
     <hr>
     <div style="text-align: right; margin-bottom: 20px;">
         <select id="viewMode" class="form-select" style="width: 300px; display: inline-block;">
-            <option value="list" selected>Показать все товары</option>
-            <option value="grouped">Объединить по названию</option>
+            <option value="list" selected>Показать неоплаченные заказы</option>
+            <option value="grouped">Приобретенные товары</option>
         </select>
+
         <a href="/orders/report/pdf" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет PDF</a>
         <a href="/orders/report/xml" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет XML</a>
         <a href="/orders/report/json" class="btn btn-primary" style="margin-left: 20px;">Скачать отчет JSON</a>
@@ -15,22 +16,31 @@
     </div>
 
     <div id="listView">
-        <#if products?size == 0>
+        <#if deliveries?size == 0>
             <p style="text-align: center">Заказов пока нет.</p>
         <#else>
             <table class="table table-bordered table-success" style="border-radius: 10px; overflow: hidden;">
                 <thead>
                 <tr>
                     <th>Название товара</th>
-                    <th>Цена</th>
+                    <th>Дата прибытия</th>
+                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
-                <#list products as product>
-                    <tr>
-                        <td>${product.title}</td>
-                        <td>${product.price} руб.</td>
-                    </tr>
+                <#list deliveries as delivery>
+                    <#if !delivery.isIssued()>
+                        <tr>
+                            <td>${delivery.deliveryName}</td>
+                            <td>${delivery.arrivalDate}</td>
+                            <td>
+                                <form action="/orders/issue/${delivery.deliveryId}" method="post">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                    <button type="submit">Выдать</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </#if>
                 </#list>
                 </tbody>
             </table>
@@ -60,7 +70,6 @@
             </table>
         </#if>
         <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
-
     </div>
 
     <hr>
@@ -71,7 +80,7 @@
         </div>
         <button id="analyticsButton" class="btn btn-info">Аналитика</button>
     </div>
-<hr>
+    <hr>
     <div id="analyticsContainer" style="display: none; text-align: center; margin-top: 20px;">
         <h3>Статистика заказов</h3>
         <canvas id="analyticsChart" width="100" height="100"></canvas>
@@ -164,9 +173,7 @@
                 analyticsContainer.style.display = 'none';
             }
         });
-    </script>
 
-    <script>
         const viewMode = document.getElementById('viewMode');
         const listView = document.getElementById('listView');
         const groupedView = document.getElementById('groupedView');
@@ -181,4 +188,56 @@
             }
         });
     </script>
+
+    <button id="deliveryChartButton" class="btn btn-info" style="margin-left: 20px;">График доставок по пунктам выдачи</button>
+    <div id="deliveryChartContainer" style="display: none; text-align: center; margin-top: 20px;">
+        <h3>График доставок по пунктам выдачи</h3>
+        <canvas id="deliveryChart" width="100" height="100"></canvas>
+    </div>
+
+    <script>
+        const deliveryChartButton = document.getElementById('deliveryChartButton');
+        const deliveryChartContainer = document.getElementById('deliveryChartContainer');
+        const deliveryChartCtx = document.getElementById('deliveryChart').getContext('2d');
+        let deliveryChart;
+
+        deliveryChartButton.addEventListener('click', function () {
+            if (deliveryChartContainer.style.display === 'none') {
+                deliveryChartContainer.style.display = 'block';
+
+                // Получаем данные для графика с сервера
+                fetch('/delivery/analytics')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (deliveryChart) deliveryChart.destroy(); // Удаляем старую диаграмму
+                        deliveryChart = new Chart(deliveryChartCtx, {
+                            type: 'bar', // Столбчатый график
+                            data: {
+                                labels: data.pickupPointIds, // ID пунктов выдачи на оси X
+                                datasets: [{
+                                    label: 'Количество доставок',
+                                    data: data.deliveryCounts, // Данные по количеству доставок
+                                    backgroundColor: '#4CAF50', // Цвет столбцов
+                                    borderColor: '#388E3C', // Цвет рамки столбцов
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                aspectRatio: 2.5,
+                                scales: {
+                                    x: { title: { display: true, text: 'Пункт выдачи (ID)' } },
+                                    y: { title: { display: true, text: 'Количество доставок' } }
+                                }
+                            }
+                        });
+                    });
+            } else {
+                deliveryChartContainer.style.display = 'none';
+            }
+        });
+    </script>
+
+
 </@t.template>

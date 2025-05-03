@@ -62,41 +62,39 @@
     </div>
 
     <a href="/profile" class="btn btn-secondary mt-3">Назад к панели администратора</a>
+    <hr>
 
-    <div class="card-columns">
+    <div class="row">
         <#list products as product>
-            <a href="/product/${product.id}" class="product-link">
-                <div class="card text-white bg-dark my-3 product">
-                    <div class="card-top" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="flex: 1;">
+            <div class="col-md-4 d-flex align-items-stretch mb-4">
+                <a href="/product/${product.id}" class="product-link flex-fill">
+                    <div class="card text-white bg-dark product flex-fill" style="display: flex; flex-direction: column; height: 100%;">
+                        <div class="card-top d-flex justify-content-between align-items-center p-2">
                             <form action="/product/delete/${product.id}" method="post" style="display: inline;">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom: 10px; padding: 8px 12px;">Удалить</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                             </form>
+                            <a href="/product/edit/${product.id}" class="btn btn-warning btn-sm">Изменить</a>
+                            <a href="/product/${product.id}" class="btn btn-info btn-sm">Подробнее</a>
                         </div>
-                        <div style="flex: 1; text-align: center;">
-                            <a href="/product/edit/${product.id}" class="btn btn-warning btn-sm" style="padding: 8px 12px; margin-bottom: 10px;">Изменить</a>
+                        <#if product.mainImageId?has_content>
+                            <img src="/images/${product.mainImageId}" class="card-img-top" alt="Изображение товара">
+                        <#else>
+                            <img src="/images/avatar.png" class="card-img-top" alt="Изображение по умолчанию">
+                        </#if>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.title}</h5>
+                            <p class="card-text">${product.price} BYN</p>
                         </div>
-                        <div style="flex: 1; text-align: right;">
-                            <a href="/product/${product.id}" class="btn btn-info btn-sm" style="padding: 8px 12px; margin-bottom: 10px;">Подробнее</a>
+                        <div class="card-footer">
+                            ${product.city}
                         </div>
                     </div>
-                    <#if product.mainImageId?has_content>
-                        <img src="/images/${product.mainImageId}" class="card-img-top" alt="Изображение товара">
-                    <#else>
-                        <img src="/images/avatar.png" class="card-img-top" alt="Изображение по умолчанию">
-                    </#if>
-                    <div class="card-body">
-                        <h5 class="card-title">${product.title}</h5>
-                        <p class="card-text">${product.price} BYN</p>
-                    </div>
-                    <div class="card-footer">
-                        ${product.city}
-                    </div>
-                </div>
-            </a>
+                </a>
+            </div>
         <#else>
             <h1 style="text-align: center">Не найдено</h1>
         </#list>
     </div>
+
 </@t.template>

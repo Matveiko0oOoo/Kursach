@@ -4,16 +4,15 @@ import com.example.buysell.models.*;
 import com.example.buysell.repositories.CartItemRepository;
 import com.example.buysell.repositories.CityRepository;
 import com.example.buysell.repositories.DeliveryRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,9 @@ public class DeliveryService {
     private final CityRepository cityRepository;
     private final ProductService productService; // добавлено поле
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public DeliveryService(CartItemRepository cartItemRepository,
@@ -86,10 +88,52 @@ public class DeliveryService {
     }
 
     public List<Delivery> getDeliveries(User user) {
-        return deliveryRepository.findByUser(user);
+        List<Delivery> deliveries = deliveryRepository.findByUser(user);
+
+        // Сортировка доставок по дате отправления (по убыванию)
+        deliveries.sort(Comparator.comparing(Delivery::getAdmissionDate).reversed());
+
+        return deliveries;
     }
 
     public List<Delivery> getAllDeliveries() {
         return deliveryRepository.findAll(); // Получаем все доставки
     }
+
+    public Delivery findById(Long id) {
+        Optional<Delivery> optionalDelivery = deliveryRepository.findById(id);
+        return optionalDelivery.orElse(null); // Возвращает null, если доставка не найдена
+    }
+
+    public void save(Delivery delivery) {
+        deliveryRepository.save(delivery); // Сохраняет или обновляет объект Delivery
+    }
+
+    public void issueDelivery(Long deliveryId) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new IllegalArgumentException("Доставка не найдена"));
+        delivery.setIssued(true);  // Установка is_issued в true
+        deliveryRepository.save(delivery); // Сохранение изменений
+    }
+
+    public List<Delivery> findByIsIssuedFalse() {
+        return deliveryRepository.findByIsIssuedFalse();
+    }
+
+    // Метод для получения доставок с isIssued = true
+    public List<Delivery> findByIsIssuedTrue() {
+        return deliveryRepository.findByIsIssuedTrue();
+    }
+
+    public List<Object[]> getDeliveryAnalytics() {
+        // Запрос для получения количества доставок по пунктам выдачи
+        String query = "SELECT d.pickUpPoint.id, COUNT(d) " +
+                "FROM Delivery d " +
+                "GROUP BY d.pickUpPoint.id";
+
+        return entityManager.createQuery(query, Object[].class).getResultList();
+    }
+
+
+
 }
